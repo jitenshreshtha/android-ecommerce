@@ -41,8 +41,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+
 
 
     // TODO: Add the dependencies for Firebase products you want to use
@@ -60,5 +59,9 @@ dependencies {
     // Glide dependency
     implementation ("com.github.bumptech.glide:glide:4.13.2")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.13.2")
+
+    // Awesome validation library
+    implementation ("com.basgeekball:awesome-validation:4.3")
+
 
 }

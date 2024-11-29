@@ -16,6 +16,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -27,6 +29,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText email, password, confirmPassword;
     private Button signupBtn;
     private TextView loginBtn;
+    private AwesomeValidation awesomeValidation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,13 @@ public class SignupActivity extends AppCompatActivity {
         signupBtn = findViewById(R.id.signupBtn);
         loginBtn = findViewById(R.id.loginBtn);
 
+        // Initialize AwesomeValidation
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+
+        awesomeValidation.addValidation(this, R.id.signupUsername, android.util.Patterns.EMAIL_ADDRESS, R.string.invalid_email);
+        awesomeValidation.addValidation(this, R.id.signupPassword, ".{6,}", R.string.invalid_password); // Minimum 6 characters
+        awesomeValidation.addValidation(this, R.id.confirmPassword, R.id.signupPassword, R.string.password_mismatch); // Match password
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,24 +63,29 @@ public class SignupActivity extends AppCompatActivity {
         signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim())
-                        .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Signup successful
-                                    Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
-                                    // Navigate to another activity or update UI
-                                    Intent newIntent2 = new Intent(SignupActivity.this, HomeActivity.class);
-                                    startActivity(newIntent2);
-                                } else {
-                                    // Signup failed
-                                    Toast.makeText(SignupActivity.this, "Signup failed: " + task.getException().getMessage(),
-                                            Toast.LENGTH_SHORT).show();
-                                    Log.e("SignupActivity", "Error: ", task.getException());
+                if(awesomeValidation.validate()){
+                    mAuth.createUserWithEmailAndPassword(email.getText().toString().trim(), password.getText().toString().trim())
+                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Signup successful
+                                        Toast.makeText(SignupActivity.this, "Signup successful!", Toast.LENGTH_SHORT).show();
+                                        // Navigate to another activity or update UI
+                                        Intent newIntent2 = new Intent(SignupActivity.this, HomeActivity.class);
+                                        startActivity(newIntent2);
+                                    } else {
+                                        // Signup failed
+                                        Toast.makeText(SignupActivity.this, "Signup failed: " + task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                        Log.e("SignupActivity", "Error: ", task.getException());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
+                else{
+                    Toast.makeText(SignupActivity.this, "Validation failed. Please check your inputs", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
