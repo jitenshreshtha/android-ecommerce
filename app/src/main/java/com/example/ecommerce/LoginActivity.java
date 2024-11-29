@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                loginBtn.setEnabled(true); // Re-enable the button after the process
 
                                 if (task.isSuccessful()) {
                                     // Login successful

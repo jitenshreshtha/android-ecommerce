@@ -23,6 +23,7 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
+    // firebase realtime database connection
     DatabaseReference database = FirebaseDatabase.getInstance().getReference("cards");
 
 

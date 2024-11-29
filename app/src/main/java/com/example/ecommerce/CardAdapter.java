@@ -42,9 +42,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
         // Set click listener
         holder.itemView.setOnClickListener(view -> {
             Intent intent = new Intent(context, GamedetailsActivity.class);
-            intent.putExtra("imageUrl", card.getImageUrl());
-            intent.putExtra("title", card.getTitle());
-            intent.putExtra("description", card.getDescription());
+            intent.putExtra("gameId", position + 1);
             context.startActivity(intent);
         });
     }
